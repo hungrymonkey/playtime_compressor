@@ -4,7 +4,7 @@
 
 import numpy as np
 
-__all__ = [gauss_kernel]
+__all__ = ['gauss_kernel', 'hello_gauss']
 
 """
 similar to matlab fspecial("gaussian",sig)
@@ -14,3 +14,6 @@ def gauss_kernel(sig):
    x, y = np.mgrid[-3*sig:(3*sig+1),-3*sig:(3*sig+1)]
    exponents = np.exp( -(x**2+y**2)/(2*sig**2))
    return exponents/ np.sum(exponents.flatten())
+
+def hello_gauss():
+   print( "hello world")
