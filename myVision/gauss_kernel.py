@@ -28,6 +28,25 @@ def laplacian_gauss(sig, ksize):
    exponents = np.exp( -xy2/(2*sig**2) )
    return exponents * (xy2 - 2 * sig**2) / ( 2 * np.pi * sig**6 * exponents.sum()) 
    
+def box_hessian( box, size=9 ):
+   """
+   Parameters:
+   box : 
+      This variable only accepts these strings: xx, yy, xy
+      It creates a kernel such as [1,-2,1] [1,-2,1].T [1,-1;-1,1]
+   size: This function is only tested on known surf octave such as
+        9,15,21,27
+   """
+   center = int(size/2)
+   if box == "xx":
+      pass
+   elif box == "yy":
+      pass
+   elif box == "xy":
+      pass
+   else:
+      raise ValueError('Invalid Input box needs to be either xx, xy, or yy')
+   
 
 def hello_gauss():
    print( "hello world")
