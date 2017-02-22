@@ -4,7 +4,7 @@
 
 import numpy as np
 
-__all__ = ['gauss_kernel', 'hello_gauss']
+__all__ = ['gauss_kernel', 'hello_gauss','box_hessian']
 
 """
 similar to matlab fspecial("gaussian",,ksiz)
@@ -37,15 +37,25 @@ def box_hessian( box, size=9 ):
    size: This function is only tested on known surf octave such as
         9,15,21,27
    """
-   center = int(size/2)
+   c = int(size/2)
+   """
+   The box filter must grow at multiples of 2 pixels.
+   """
+   l = (size - 9 )/6 * 2 + 2
+
+   box_filter = np.zeros((size,size))
    if box == "xx":
       pass
    elif box == "yy":
       pass
    elif box == "xy":
-      pass
+      #a = [(c-1, c-1), (c-1-l, c-1-l), (c-1-l, c-1), (c-1, c-1-l)]
+      #b = [(c+1, c-1), (c+1+l, c-1), (c+1, c-1-l), (c+1+l, c-1-l)]
+      #c = [(c-1, c+1), (c-1, c+1+l), (c-1-l, c+1), (c-1-l, c+1+l)]
+      #d = [(c+1, c+1), (c+1+l, c+1+l), (c+1, c+1+l), (c+1+l, c+1)]
    else:
       raise ValueError('Invalid Input box needs to be either xx, xy, or yy')
+   return box_filter
    
 
 def hello_gauss():
