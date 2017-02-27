@@ -5,10 +5,10 @@
 
 import numpy as np
 
-__all__ = ['gauss_kernel', 'hello_gauss','box_2nd_order']
+__all__ = ['gauss_kernel', 'gauss_2nd_order', 'hello_gauss','box_2nd_order']
 
 """
-similar to matlab fspecial("gaussian",,ksiz)
+similar to matlab fspecial("gaussian",ksiz)
 """
 
 def gauss_kernel(sig, ksize=3):
@@ -44,7 +44,6 @@ def gauss_2nd_order( sig, box, ksize=9 ):
    Gyy=G(x,y,sig) = (-1+x^2/sig^2)* e^(-(x^2+y^2)/2/sig^2)/2*pi*sig^4
    Gxy=G(x,y,sig) = (xy/sig^2)/2*pi*sig^6 * e^(-(x^2+y^2)/2/sig^2)
    http://campar.in.tum.de/Chair/HaukeHeibelGaussianDerivatives
-
 
    Alternate simple way
    http://stackoverflow.com/questions/23980080/derivative-of-gaussian-filter-in-matlab

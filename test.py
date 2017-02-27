@@ -3,7 +3,7 @@
 import myVision
 
 def main():
-   myVision.hello_gauss()
+   myVision.hello_surf()
     
 
 if __name__ == "__main__":

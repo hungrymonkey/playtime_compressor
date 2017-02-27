@@ -10,6 +10,7 @@ import scipy as sp
 import scipy.misc
 import scipy.signal ##convolution function
 from myVision.img_kernel import laplacian_gauss, laplacian_gauss, box_2nd_order
+from myVision.img_kernel import *
 from myVision.utils import rgba_to_grey, conv2, frobenius_norm
 
 from numpy.linalg import det
@@ -56,13 +57,8 @@ def hessian_det(log_sig, gauss_sig):
 
     d_xy = box_2nd_order('xy',9)
     d_xx = box_2nd_order('xx',9)
-    log_k = laplacian_gauss(log_sig,9)
-    l_xx = conv2( log_k, Dx, mode='same')
-    l_xy = conv2( log_k, Dxy, mode='same')
-    #d_xy = conv2( gaus_k, Dxy, mode='same')
-    #d_xx = conv2( gaus_k, Dx, mode='same')
-    #print(det(d_xy))
-    #plt.imsave('/tmp/myImage.jpeg',gaus_k)
+    l_xx = gauss_2nd_order( log_sig, 'xx', 9)
+    l_xy = gauss_2nd_order( log_sig, 'xy', 9)
 
     return frobenius_norm( l_xy) * frobenius_norm( d_xx ) / (frobenius_norm(l_xx) * frobenius_norm(d_xy))
     
@@ -73,3 +69,5 @@ def hello_surf():
     #log_k = laplacian_gauss(1.2,9)
     #print(hessian(img2))
     print( hessian_det(1.2,1.2))
+
+
