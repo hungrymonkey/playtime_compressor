@@ -38,6 +38,36 @@ def box_1st_order( box, l ):
     else:
         raise ValueError('Invalid Input box needs to be either x or y')
         
+def gauss_2nd_order( sig, box, ksize=9 ):
+   """
+   Gxx=G(x,y,sig) = (-1+x^2/sig^2)* e^(-(x^2+y^2)/2/sig^2)/2*pi*sig^4
+   Gyy=G(x,y,sig) = (-1+x^2/sig^2)* e^(-(x^2+y^2)/2/sig^2)/2*pi*sig^4
+   Gxy=G(x,y,sig) = (xy/sig^2)/2*pi*sig^6 * e^(-(x^2+y^2)/2/sig^2)
+   http://campar.in.tum.de/Chair/HaukeHeibelGaussianDerivatives
+
+
+   Alternate simple way
+   http://stackoverflow.com/questions/23980080/derivative-of-gaussian-filter-in-matlab
+   G1=fspecial('gauss',[round(k*sigma), round(k*sigma)], sigma);
+   [Gx,Gy] = gradient(G1);   
+   [Gxx,Gxy] = gradient(Gx);
+   [Gyx,Gyy] = gradient(Gy);
+   """
+   l = int(ksize/2)
+   x, y = np.mgrid[-l:l+1,-l:l+1]
+   x2 = x**2
+   y2 = y**2
+   xy2 = x2+y2
+   exponents = np.exp( -xy2/(2*sig**2) )
+   sig6 = sig ** 6
+   if box == "xx":
+       return (x2 - sig ** 2)*exponents/( 2 * np.pi * sig**6 * exponents.sum()) 
+   elif box == "yy":
+       return (y2 - sig ** 2)*exponents/( 2 * np.pi * sig**6 * exponents.sum()) 
+   elif box == "xy":
+       return x*y*exponents/( 2 * np.pi * sig**6 * exponents.sum()) 
+   else:
+      raise ValueError('Invalid Input box needs to be either xx, xy, or yy')
         
 def box_2nd_order( box, size=9 ):
    """
