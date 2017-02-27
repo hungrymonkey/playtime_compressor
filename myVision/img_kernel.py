@@ -1,10 +1,11 @@
 """Gauss kernel and Gauss filter
 
+   Note: numpy import images height by width
 """
 
 import numpy as np
 
-__all__ = ['gauss_kernel', 'hello_gauss','box_hessian']
+__all__ = ['gauss_kernel', 'hello_gauss','box_2nd_order']
 
 """
 similar to matlab fspecial("gaussian",,ksiz)
@@ -28,7 +29,17 @@ def laplacian_gauss(sig, ksize):
    exponents = np.exp( -xy2/(2*sig**2) )
    return exponents * (xy2 - 2 * sig**2) / ( 2 * np.pi * sig**6 * exponents.sum()) 
    
-def box_hessian( box, size=9 ):
+def box_1st_order( box, l ):
+    dx = np.asarray([[1,1,1]])
+    if box == "x":
+        pass
+    elif box == "y":
+        pass
+    else:
+        raise ValueError('Invalid Input box needs to be either x or y')
+        
+        
+def box_2nd_order( box, size=9 ):
    """
    Parameters:
    box : 
@@ -41,14 +52,23 @@ def box_hessian( box, size=9 ):
    """
    The box filter must grow at multiples of 2 pixels.
    """
-   l = (size - 9 )/6 * 2 + 2
-
+   l = int(size /3)
    box_filter = np.zeros((size,size))
    if box == "xx":
-      pass
+      h = int(l/2)
+      box_filter[c+h:c+h+l+1, c-l:c+l+1] = 1
+      box_filter[c-h:c+h+1  , c-l:c+l+1] = -2 #middle box
+      box_filter[c-h-l:c-h  , c-l:c+l+1] = 1
    elif box == "yy":
-      pass
+      h = int(l/2)
+      box_filter[c-l:c+l+1, c+h:c+h+l+1] = 1
+      box_filter[c-l:c+l+1, c-h:c+h+1] = -2 #middle box
+      box_filter[c-l:c+l+1, c-h-l:c-h] = 1
    elif box == "xy":
+      box_filter[c-l:c    ,c-l:c] =  -1  #a
+      box_filter[c+1:c+l+1,c-l:c] =   1  #b
+      box_filter[c-l:c    ,c+1:c+l+1] =  1  #c
+      box_filter[c+1:c+l+1,c+1:c+l+1] = -1  #d
       #a = [(c-1, c-1), (c-1-l, c-1-l), (c-1-l, c-1), (c-1, c-1-l)]
       #b = [(c+1, c-1), (c+1+l, c-1), (c+1, c-1-l), (c+1+l, c-1-l)]
       #c = [(c-1, c+1), (c-1, c+1+l), (c-1-l, c+1), (c-1-l, c+1+l)]
@@ -60,3 +80,6 @@ def box_hessian( box, size=9 ):
 
 def hello_gauss():
    print( "hello world")
+   print( box_2nd_order( 'xx', size=15 ))
+   print( box_2nd_order( 'xy', size=15 ).sum())
+
