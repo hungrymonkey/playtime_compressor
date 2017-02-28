@@ -4,7 +4,7 @@
 import numpy as np
 from scipy.ndimage.filters import convolve
 
-__all__ = ['rgba_to_grey', 'rgb_to_grey','conv2',
+__all__ = ['rgba_to_grey', 'rgb_to_grey','conv2', 'integral_img',
            'frobenius_norm']
 
 
@@ -24,6 +24,13 @@ def frobenius_norm(mat):
     https://en.wikipedia.org/wiki/Matrix_norm#Frobenius_norm
     """
     return np.sqrt(np.power(mat,2).sum())
+
+def integral_img(img):
+    """
+    cumsum([1,1,2,1,1]) = [1,2,4,5,6]
+    """
+    return img.cumsum(axis=0).cumsum(axis=1)
+    
 
 def conv2(x,y,mode='same'):
     """
