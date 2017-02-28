@@ -21,7 +21,7 @@ from numpy.linalg import det
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 
-__all__ = ['hello_surf']
+__all__ = ['hello_surf', 'w']
 
 Dx = np.asarray([1,-2,1])
 Dxy = np.asarray([[1,-1],[-1,1]])
@@ -51,22 +51,25 @@ def hessian(img):
     d_yx = sp.signal.convolve2d( gconv_img, Dyx, mode='same')
     print( det( l_xy) * det( d_yy )/ (det(l_yy) * det(d_xy)))
     
-def w(gauss_sig, box_size):
+def w_sig(gauss_sig, box_size):
     #gaus_k = laplacian_gauss(gauss_sig,9)
     
 
     d_xy = box_2nd_order('xy',box_size)
     d_xx = box_2nd_order('xx',box_size)
-    l_xx = gauss_2nd_order( gauss_sig, 'xx', box_size)
-    l_xy = gauss_2nd_order( gauss_sig, 'xy', box_size)
+    l_xx = gas_2nd_ord( 'xx', box_size)
+    l_xy = gas_2nd_ord( 'xy', box_size)
 
     return frobenius_norm( l_xy) * frobenius_norm( d_xx ) / (frobenius_norm(l_xx) * frobenius_norm(d_xy))
+
+def w(box_size):
+    return w_sig(box_sigma(box_size), box_size)
     
 def hello_surf():
     #img2_filename = './sample_routines/resize_img/FOX_Sports_logo2.png'
     #img2 = rgba_to_grey(sp.misc.imread( img2_filename ))
     #plt.imsave('/tmp/myImage.jpeg',img2)
     #log_k = laplacian_gauss(1.2,9)
-    print( w(1.2,9))
+    print( w_sig(1.2,9))
 
 

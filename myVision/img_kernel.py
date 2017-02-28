@@ -5,7 +5,7 @@
 
 import numpy as np
 
-__all__ = ['gauss_kernel', 'gauss_2nd_order', 'hello_gauss','box_2nd_order']
+__all__ = ['gauss_kernel', 'gas_2nd_ord', 'gauss_2nd_order', 'hello_gauss','box_2nd_order','L', 'box_sigma']
 
 """
 similar to matlab fspecial("gaussian",ksiz)
@@ -16,6 +16,12 @@ def gauss_kernel(sig, ksize=3):
    x, y = np.mgrid[-l:l+1,-l:l+1]
    exponents = np.exp( -(x**2+y**2)/(2*sig**2))
    return exponents/exponents.sum()
+
+def L(i):
+    """
+    http://www.ipol.im/pub/art/2015/69/ page 190
+    """
+    return 2*i+1
 """
 similar to matlab 
 pkg load image
@@ -38,6 +44,10 @@ def box_1st_order( box, l ):
     else:
         raise ValueError('Invalid Input box needs to be either x or y')
         
+def box_sigma( ksize):
+    return .4*ksize/3
+
+
 def gauss_2nd_order( sig, box, ksize=9 ):
    """
    Gxx=G(x,y,sig) = (-1+x^2/sig^2)* e^(-(x^2+y^2)/2/sig^2)/2*pi*sig^4
@@ -68,6 +78,11 @@ def gauss_2nd_order( sig, box, ksize=9 ):
        return numerator/( 2 * np.pi * sig**6)# * exponents.sum()) 
    else:
       raise ValueError('Invalid Input box needs to be either xx, xy, or yy')
+
+def gas_2nd_ord( box, ksize=9 ):
+   return gauss_2nd_order( box_sigma( ksize), box, ksize )
+
+
 
 def box_2nd_order( box, size=9 ):
    """
@@ -154,6 +169,6 @@ def box_2nd_order( box, size=9 ):
 
 def hello_gauss():
    print( "hello world")
-   print( gauss_2nd_order(1.2, 'xy', 5 ))
-   print( gauss_2nd_order(1.2, 'xy', 5 ).sum())
+   print( gas_2nd_ord( 'xy', 5 ))
+   print( gas_2nd_ord( 'xy', 5 ).sum())
 
