@@ -125,8 +125,9 @@ class Surf:
         xdim, ydim = img.shape
         pass
     
-     def detect(self, img, mask=None):
+    def detect(self, img, mask=None):
         integral_img = integral_img(img)
+        pass
     
 def hello_surf():
     #img2_filename = './sample_routines/resize_img/FOX_Sports_logo2.png'
