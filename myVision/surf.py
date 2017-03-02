@@ -164,8 +164,8 @@ class Surf:
             c2 = self._get_p(i_img,i-l  ,j+h)
             d2 = self._get_p(i_img,i+l-1,j+h)
             
-            a3 = d2
-            b3 = c2
+            a3 = c2
+            b3 = d2
             #a3 = self._get_p(i_img,i-l  ,j+h)
             #b3 = self._get_p(i_img,i+l-1,j+h)
             c3 = self._get_p(i_img,i-l  ,j+h+l)
