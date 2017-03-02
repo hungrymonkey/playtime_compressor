@@ -91,8 +91,32 @@ class Surf:
         
     def box_xx(self,i_img,ksize):
         xdim, ydim = img.shape
-        h = int(ksize/2)
-        pass
+        l = int(ksize/3)
+        h = int(l/2)
+        out = np.zeros(img.shape)
+        for i,j in itertools.product(range(xdim), range(ydim)):
+            a1 = _get_p(i_img, i-h-l-1, j-l)
+            b1 = _get_p(i_img, i-h-1  , j-l)
+            c1 = _get_p(i_img, i-h-l-1, j+l-1)
+            d1 = _get_p(i_img, i-h-1  , j+l-1)
+            
+            a2 = b1
+            c2 = d1
+            #a2 = _get_p(i_img, i-h-1, j-l)
+            b2 = _get_p(i_img, i+h  , j-l)
+            #c2 = _get_p(i_img, i-h-1, j+1-1)
+            d2 = _get_p(i_img, i+h  , j+l-1)
+            
+            a3 = b2
+            c3 = d2
+            #a3 = _get_p(i_img, i+h, j-l)
+            b3 = _get_p(i_img, i+h+l, j-l)
+            #c3 = _get_p(i_img, i+h  , j+l-1)
+            d3 = _get_p(i_img, i+h+l, j+l-1)
+            out[i,j] = (a1-b1-c1+d1)-2*(a2-b2-c2+d2)+(a3-b3-c3+d3)
+        return out            
+            
+            
     def box_xy(self,i_img,ksize):
         xdim, ydim = img.shape
         l = int(ksize/3)
@@ -123,7 +147,31 @@ class Surf:
     
     def box_yy(self,i_img,ksize):
         xdim, ydim = img.shape
-        pass
+        l = int(ksize/3)
+        h = int(l/2)
+        out = np.zeros(img.shape)
+        for i,j in itertools.product(range(xdim), range(ydim)):
+                
+            a1 = _get_p(i_img,i-l  ,j-h-1-l)
+            b1 = _get_p(i_img,i+l-1,j-h-1-l)
+            c1 = _get_p(i_img,i-l  ,j-h-1)
+            d1 = _get_p(i_img,i+l-1,j-h-1)
+            
+            c2 = d1
+            b2 = c1
+            #a2 = _get_p(i_img,i-l  ,j-h-1)
+            #b2 = _get_p(i_img,i+l-1,j-h-1)
+            c2 = _get_p(i_img,i-l  ,j+h)
+            d2 = _get_p(i_img,i+l-1,j+h)
+            
+            a3 = c2
+            b3 = d2
+            #a3 = _get_p(i_img,i-l  ,j+h)
+            #b3 = _get_p(i_img,i+l-1,j+h)
+            c3 = _get_p(i_img,i-l  ,j+h+l)
+            d3 = _get_p(i_img,i+l-1,j+h+l)
+            out[i,j] = (a1-b1-c1+d1)-2*(a2-b2-c2+d2)+(a3-b3-c3+d3)
+        return out
     
     def detect(self, img, mask=None):
         integral_img = integral_img(img)
