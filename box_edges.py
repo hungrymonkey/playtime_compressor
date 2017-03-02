@@ -2,6 +2,14 @@
 
 import numpy as np
 
+"""
+This file is meant to check
+the integral image x placements.
+
+All all times, this file should be the
+same as surf.py
+
+"""
 
 
 def xy(ksize=9):
@@ -85,9 +93,9 @@ def yy(ksize=9):
     return yy
 
 def main():
-   print( xx(9))
-   print( xy(15))
-   print( yy(9))
+   print( xx(15))
+   print( xy(9))
+   print( yy(15))
 
 if __name__ == "__main__":
     main()
