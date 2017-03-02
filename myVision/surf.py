@@ -74,6 +74,39 @@ def w_sig(gauss_sig, box_size):
 def w(box_size):
     return w_sig(box_sigma(box_size), box_size)
     
+    
+class Surf:
+    def __init__(self,th=400):
+       self.hessianThreshold=th
+    
+    def _get_p(img, x, y):
+        # return 0 if x or y is less than one
+        if x < 0 or y < 0:
+            return 0
+        xdim, ydim = img.shape
+        # solve the out of bounds problems
+        return img[min(x,xdim-1),min(y,ydim-1)]
+        
+   
+        
+    def box_xx(i_img,ksize):
+        xdim, ydim = img.shape
+        h = int(ksize/2)
+        pass
+    def box_xy(i_img,ksize):
+        xdim, ydim = img.shape
+        c = int(ksize/2)
+        l = int(ksize/3)
+        for i,j in itertools.product(range(xdim), range(ydim)):
+            pass
+    
+    def box_yy(i_img,ksize):
+        xdim, ydim = img.shape
+        pass
+    
+     def detect(self, img, mask=None):
+        integral_img = integral_img(img)
+    
 def hello_surf():
     #img2_filename = './sample_routines/resize_img/FOX_Sports_logo2.png'
     #img2 = rgba_to_grey(sp.misc.imread( img2_filename ))
