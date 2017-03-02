@@ -79,7 +79,7 @@ class Surf:
     def __init__(self,th=400):
        self.hessianThreshold=th
     
-    def _get_p(img, x, y):
+    def _get_p(self,img, x, y):
         # return 0 if x or y is less than one
         if x < 0 or y < 0:
             return 0
@@ -89,18 +89,39 @@ class Surf:
         
    
         
-    def box_xx(i_img,ksize):
+    def box_xx(self,i_img,ksize):
         xdim, ydim = img.shape
         h = int(ksize/2)
         pass
-    def box_xy(i_img,ksize):
+    def box_xy(self,i_img,ksize):
         xdim, ydim = img.shape
-        c = int(ksize/2)
         l = int(ksize/3)
+        out = np.zeros(img.shape)
         for i,j in itertools.product(range(xdim), range(ydim)):
-            pass
+            a1 = _get_p(i_img,i-l-1,j-l-1)
+            b1 = _get_p(i_img,i-1  ,j-l-1)
+            c1 = _get_p(i_img,i-l-1,j-1)
+            d1 = _get_p(i_img,i-1  ,j-1)
     
-    def box_yy(i_img,ksize):
+            a2 = _get_p(i_img,i  ,j-l-1)
+            b2 = _get_p(i_img,i+l,j-l-1)
+            c2 = _get_p(i_img,i  ,j-1)
+            d2 = _get_p(i_img,i+l,j-1)
+            
+            a3 = _get_p(i_img,i-l-1,j)
+            b3 = _get_p(i_img,i-1  ,j)
+            c3 = _get_p(i_img,i-l-1,j+l)
+            d3 = _get_p(i_img,i-1  ,j+l)
+            
+            a4 = _get_p(i_img,i  ,j)
+            b4 = _get_p(i_img,i+l,j)
+            c4 = _get_p(i_img,i  ,j+l)
+            d4 = _get_p(i_img,i+l,j+l)
+            
+            out[i,j] = (a1-b1-c1+d1)-(a2-b2-c2+d2)-(a3-b3-c3+d3)+(a4-b4-c4+d4)
+        return out
+    
+    def box_yy(self,i_img,ksize):
         xdim, ydim = img.shape
         pass
     
