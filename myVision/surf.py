@@ -4,7 +4,7 @@ ftp://ftp.vision.ee.ethz.ch/publications/articles/eth_biwi_00517.pdf
 
 """
 
-
+import itertools
 import numpy as np
 import scipy as sp
 import scipy.misc
@@ -21,7 +21,7 @@ from numpy.linalg import det
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 
-__all__ = ['hello_surf', 'w']
+__all__ = ['hello_surf', 'w', 'Surf']
 
 Dx = np.asarray([1,-2,1])
 Dxy = np.asarray([[1,-1],[-1,1]])
@@ -90,91 +90,91 @@ class Surf:
    
         
     def box_xx(self,i_img,ksize):
-        xdim, ydim = img.shape
+        xdim, ydim = i_img.shape
         l = int(ksize/3)
         h = int(l/2)
-        out = np.zeros(img.shape)
+        out = np.zeros(i_img.shape)
         for i,j in itertools.product(range(xdim), range(ydim)):
-            a1 = _get_p(i_img, i-h-l-1, j-l)
-            b1 = _get_p(i_img, i-h-1  , j-l)
-            c1 = _get_p(i_img, i-h-l-1, j+l-1)
-            d1 = _get_p(i_img, i-h-1  , j+l-1)
+            a1 = self._get_p(i_img, i-h-l-1, j-l)
+            b1 = self._get_p(i_img, i-h-1  , j-l)
+            c1 = self._get_p(i_img, i-h-l-1, j+l-1)
+            d1 = self._get_p(i_img, i-h-1  , j+l-1)
             
             a2 = b1
             c2 = d1
-            #a2 = _get_p(i_img, i-h-1, j-l)
-            b2 = _get_p(i_img, i+h  , j-l)
-            #c2 = _get_p(i_img, i-h-1, j+1-1)
-            d2 = _get_p(i_img, i+h  , j+l-1)
+            #a2 = self._get_p(i_img, i-h-1, j-l)
+            b2 = self._get_p(i_img, i+h  , j-l)
+            #c2 = self._get_p(i_img, i-h-1, j+1-1)
+            d2 = self._get_p(i_img, i+h  , j+l-1)
             
             a3 = b2
             c3 = d2
-            #a3 = _get_p(i_img, i+h, j-l)
-            b3 = _get_p(i_img, i+h+l, j-l)
-            #c3 = _get_p(i_img, i+h  , j+l-1)
-            d3 = _get_p(i_img, i+h+l, j+l-1)
+            #a3 = self._get_p(i_img, i+h, j-l)
+            b3 = self._get_p(i_img, i+h+l, j-l)
+            #c3 = self._get_p(i_img, i+h  , j+l-1)
+            d3 = self._get_p(i_img, i+h+l, j+l-1)
             out[i,j] = (a1-b1-c1+d1)-2*(a2-b2-c2+d2)+(a3-b3-c3+d3)
         return out            
             
             
     def box_xy(self,i_img,ksize):
-        xdim, ydim = img.shape
+        xdim, ydim = i_img.shape
         l = int(ksize/3)
-        out = np.zeros(img.shape)
+        out = np.zeros(i_img.shape)
         for i,j in itertools.product(range(xdim), range(ydim)):
-            a1 = _get_p(i_img,i-l-1,j-l-1)
-            b1 = _get_p(i_img,i-1  ,j-l-1)
-            c1 = _get_p(i_img,i-l-1,j-1)
-            d1 = _get_p(i_img,i-1  ,j-1)
+            a1 = self._get_p(i_img,i-l-1,j-l-1)
+            b1 = self._get_p(i_img,i-1  ,j-l-1)
+            c1 = self._get_p(i_img,i-l-1,j-1)
+            d1 = self._get_p(i_img,i-1  ,j-1)
     
-            a2 = _get_p(i_img,i  ,j-l-1)
-            b2 = _get_p(i_img,i+l,j-l-1)
-            c2 = _get_p(i_img,i  ,j-1)
-            d2 = _get_p(i_img,i+l,j-1)
+            a2 = self._get_p(i_img,i  ,j-l-1)
+            b2 = self._get_p(i_img,i+l,j-l-1)
+            c2 = self._get_p(i_img,i  ,j-1)
+            d2 = self._get_p(i_img,i+l,j-1)
             
-            a3 = _get_p(i_img,i-l-1,j)
-            b3 = _get_p(i_img,i-1  ,j)
-            c3 = _get_p(i_img,i-l-1,j+l)
-            d3 = _get_p(i_img,i-1  ,j+l)
+            a3 = self._get_p(i_img,i-l-1,j)
+            b3 = self._get_p(i_img,i-1  ,j)
+            c3 = self._get_p(i_img,i-l-1,j+l)
+            d3 = self._get_p(i_img,i-1  ,j+l)
             
-            a4 = _get_p(i_img,i  ,j)
-            b4 = _get_p(i_img,i+l,j)
-            c4 = _get_p(i_img,i  ,j+l)
-            d4 = _get_p(i_img,i+l,j+l)
+            a4 = self._get_p(i_img,i  ,j)
+            b4 = self._get_p(i_img,i+l,j)
+            c4 = self._get_p(i_img,i  ,j+l)
+            d4 = self._get_p(i_img,i+l,j+l)
             
             out[i,j] = (a1-b1-c1+d1)-(a2-b2-c2+d2)-(a3-b3-c3+d3)+(a4-b4-c4+d4)
         return out
     
     def box_yy(self,i_img,ksize):
-        xdim, ydim = img.shape
+        xdim, ydim = i_img.shape
         l = int(ksize/3)
         h = int(l/2)
-        out = np.zeros(img.shape)
+        out = np.zeros(i_img.shape)
         for i,j in itertools.product(range(xdim), range(ydim)):
                 
-            a1 = _get_p(i_img,i-l  ,j-h-1-l)
-            b1 = _get_p(i_img,i+l-1,j-h-1-l)
-            c1 = _get_p(i_img,i-l  ,j-h-1)
-            d1 = _get_p(i_img,i+l-1,j-h-1)
+            a1 = self._get_p(i_img,i-l  ,j-h-1-l)
+            b1 = self._get_p(i_img,i+l-1,j-h-1-l)
+            c1 = self._get_p(i_img,i-l  ,j-h-1)
+            d1 = self._get_p(i_img,i+l-1,j-h-1)
             
             c2 = d1
             b2 = c1
-            #a2 = _get_p(i_img,i-l  ,j-h-1)
-            #b2 = _get_p(i_img,i+l-1,j-h-1)
-            c2 = _get_p(i_img,i-l  ,j+h)
-            d2 = _get_p(i_img,i+l-1,j+h)
+            #a2 = self._get_p(i_img,i-l  ,j-h-1)
+            #b2 = self._get_p(i_img,i+l-1,j-h-1)
+            c2 = self._get_p(i_img,i-l  ,j+h)
+            d2 = self._get_p(i_img,i+l-1,j+h)
             
             a3 = c2
             b3 = d2
-            #a3 = _get_p(i_img,i-l  ,j+h)
-            #b3 = _get_p(i_img,i+l-1,j+h)
-            c3 = _get_p(i_img,i-l  ,j+h+l)
-            d3 = _get_p(i_img,i+l-1,j+h+l)
+            #a3 = self._get_p(i_img,i-l  ,j+h)
+            #b3 = self._get_p(i_img,i+l-1,j+h)
+            c3 = self._get_p(i_img,i-l  ,j+h+l)
+            d3 = self._get_p(i_img,i+l-1,j+h+l)
             out[i,j] = (a1-b1-c1+d1)-2*(a2-b2-c2+d2)+(a3-b3-c3+d3)
         return out
     
     def detect(self, img, mask=None):
-        integral_img = integral_img(img)
+        i_img = integral_img(img)
         pass
     
 def hello_surf():
