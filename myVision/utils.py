@@ -5,7 +5,7 @@ import numpy as np
 from scipy.ndimage.filters import convolve
 
 __all__ = ['rgba_to_grey', 'rgb_to_grey','conv2', 'integral_img',
-           'frobenius_norm']
+           'frobenius_norm', 'is_local_max']
 
 
 """
@@ -30,6 +30,17 @@ def integral_img(img):
     cumsum([1,1,2,1,1]) = [1,2,4,5,6]
     """
     return img.cumsum(axis=0).cumsum(axis=1)
+
+def is_local_max(img, x, y):
+    # the algorithm is simple.
+    # 1. get the 3x3 patch
+    roi = img[x-1:x+1,y-1:y+1]
+    # 2. get and zero out the center
+    pt = roi[1,1]
+    rot[1,1] = 0
+    # 3. check if the largest value is the
+    # larger than the center value
+    return roi.max() < pt
     
 
 def conv2(x,y,mode='same'):

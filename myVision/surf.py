@@ -12,7 +12,7 @@ import scipy.signal ##convolution function
 from scipy.ndimage.filters import convolve
 from myVision.img_kernel import laplacian_gauss, laplacian_gauss, box_2nd_order
 from myVision.img_kernel import *
-from myVision.utils import rgba_to_grey, conv2, frobenius_norm
+from myVision.utils import rgba_to_grey, conv2, frobenius_norm, is_local_max
 
 from numpy.linalg import det
 
@@ -156,15 +156,39 @@ class Surf:
         """
         I am using the convolution kernel in numpy because it is faster than my
         crappy code. I need to write it in c. d'oh
+        
+        ftp://ftp.vision.ee.ethz.ch/publications/articles/eth_biwi_00517.pdf pg 4
         """
-        lxy = convolve(img, box_2nd_order('xy',box_size), mode='constant')
-        lxx = convolve(img, box_2nd_order('xx',box_size), mode='constant')
-        lyy = convolve(img, box_2nd_order('yy',box_size), mode='constant')
-        return lxx*lyy - (HESSIAN_WEIGHTS[box_size]*lxy)**2
+        dxy = convolve(img, box_2nd_order('xy',box_size), mode='constant')
+        dxx = convolve(img, box_2nd_order('xx',box_size), mode='constant')
+        dyy = convolve(img, box_2nd_order('yy',box_size), mode='constant')
+        return dxx*dyy - (HESSIAN_WEIGHTS[box_size]*dxy)**2
     
-    def detect(self, img, mask=None):
-
-        pass
+    def find_points(self, o, i, doh):
+        out_list = []
+        ksize = (2*i+1)*3
+        xdim,ydim = doh.shape
+        th_mask = np.zeros(doh.shape)
+        ## remove all borders
+        th_mask[1:-1,1:-1] = (doh>self.hessianThreshold)[1:-1,1:-1]
+        x_th, y_th = np.nonzero(th_mask)
+        for x,y in zip(x_th,y_th):
+            if is_local_max(doh,x,y):
+                out_list.append((x,y,ksize))
+                
+        return out_list
+                
+            
+    
+    def detect_points(self, img, mask=None):
+        """
+        http://www.ipol.im/pub/art/2015/69/ page 93
+        """
+        doh = dict()
+        for ksize in OCTAVES.flatten():
+            doh[ksize] = self.det_hessian(img, ksize)
+        
+        
     
 def hello_surf():
     #img2_filename = './sample_routines/resize_img/FOX_Sports_logo2.png'
