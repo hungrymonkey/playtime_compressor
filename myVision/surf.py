@@ -9,6 +9,7 @@ import numpy as np
 import scipy as sp
 import scipy.misc
 import scipy.signal ##convolution function
+from scipy.ndimage.filters import convolve
 from myVision.img_kernel import laplacian_gauss, laplacian_gauss, box_2nd_order
 from myVision.img_kernel import *
 from myVision.utils import rgba_to_grey, conv2, frobenius_norm
@@ -37,29 +38,7 @@ HESSIAN_WEIGHTS = dict([(9, 0.91268594001907222), (15, 0.94869061617131789), (21
 http://www.contrib.andrew.cmu.edu/~bpires/paperMedia/box_filters.pdf
 """
 
-
-
-def hessian(img):
-    log_k = laplacian_gauss(1.2,9)
-    lconv_img = sp.signal.convolve2d( img, log_k, mode='same')
-    l_yy = sp.signal.convolve2d( lconv_img, Dx.T, mode='same')
-    l_xy = sp.signal.convolve2d( lconv_img, Dxy, mode='same')
-    l_xx = sp.signal.convolve2d( lconv_img, Dx, mode='same')
-    l_yx = sp.signal.convolve2d( lconv_img, Dyx, mode='same')
-    
-    gaus_k = laplacian_gauss(9,9)
-    gconv_img = sp.signal.convolve2d( img, gaus_k, mode='same')
-    d_yy = sp.signal.convolve2d( gconv_img, Dx.T, mode='same')
-    d_xy = sp.signal.convolve2d( gconv_img, Dxy, mode='same')
-    d_xx = sp.signal.convolve2d( gconv_img, Dx, mode='same')
-    d_yx = sp.signal.convolve2d( gconv_img, Dyx, mode='same')
-    print( det( l_xy) * det( d_yy )/ (det(l_yy) * det(d_xy)))
-    
-def hessian_det(d_xx, d_yy, d_xy, box_size):
-    w = HESSIAN_WEIGHTS[box_size]
-    return (d_xx * dyy - ( w * d_xy )**2)/(box_size/3)**4
-    
-    
+  
 def w_sig(gauss_sig, box_size):
     #gaus_k = laplacian_gauss(gauss_sig,9)
     
@@ -173,8 +152,18 @@ class Surf:
             out[i,j] = (a1-b1-c1+d1)-2*(a2-b2-c2+d2)+(a3-b3-c3+d3)
         return out
     
+    def det_hessian(self, img, box_size):
+        """
+        I am using the convolution kernel in numpy because it is faster than my
+        crappy code. I need to write it in c. d'oh
+        """
+        lxy = convolve(img, box_2nd_order('xy',box_size), mode='constant')
+        lxx = convolve(img, box_2nd_order('xx',box_size), mode='constant')
+        lyy = convolve(img, box_2nd_order('yy',box_size), mode='constant')
+        return lxx*lyy - (HESSIAN_WEIGHTS[box_size]*lxy)**2
+    
     def detect(self, img, mask=None):
-        i_img = integral_img(img)
+
         pass
     
 def hello_surf():
