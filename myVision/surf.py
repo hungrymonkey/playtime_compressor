@@ -30,8 +30,7 @@ Dyx = np.asarray([[-1,1],[1,-1]])
 
 OCTAVES = np.asarray( [[9,15,21,27],
                        [15,27,39,51],
-                       [27,51,75,99],
-                       [51,99,147,195]] )
+                       [27,51,75,99]] )
 #precalculated with generate_w script
 HESSIAN_WEIGHTS = dict([(9, 0.91268594001907222), (15, 0.94869061617131789), (21, 0.96363318446943469), (27, 0.97183526068389059), (33, 0.97701885183554882), (39, 0.98059140382344656), (45, 0.98320300342889322), (51, 0.98519542446841735), (57, 0.98676553811928536), (63, 0.98803474925078982), (69, 0.98908199557940513), (75, 0.98996082350144599), (81, 0.99070883771330698), (87, 0.99135322299183781), (93, 0.99191411951583108), (99, 0.99240676595967259), (105, 0.99284290508799999), (111, 0.9932317318866104), (117, 0.99358054899412296), (123, 0.99389522969636179), (129, 0.99418055132593675), (135, 0.99444043950110117), (141, 0.99467814983528013), (147, 0.99489640502974208), (153, 0.99509749962807448), (159, 0.9952833809953372), (165, 0.99545571258791976), (171, 0.99561592387354025), (177, 0.99576525007603289), (183, 0.99590476408511397), (189, 0.99603540227578924), (195, 0.99615798555173685), (201, 0.99627323661256362), (207, 0.99638179421250717), (213, 0.99648422500489631), (219, 0.99658103343617965), (225, 0.996672670054224), (231, 0.99675953851967403), (237, 0.99684200155057856)])
 
@@ -160,9 +159,12 @@ class Surf:
         
         ftp://ftp.vision.ee.ethz.ch/publications/articles/eth_biwi_00517.pdf pg 4
         """
-        dxy = convolve(img, box_2nd_order('xy',box_size), mode='constant')
-        dxx = convolve(img, box_2nd_order('xx',box_size), mode='constant')
-        dyy = convolve(img, box_2nd_order('yy',box_size), mode='constant')
+        #dxy = convolve(img, box_2nd_order('xy',box_size), mode='constant')
+        #dxx = convolve(img, box_2nd_order('xx',box_size), mode='constant')
+        #dyy = convolve(img, box_2nd_order('yy',box_size), mode='constant')
+        dxx = self.box_xx(img, box_size)
+        dxy = self.box_xy(img, box_size)
+        dyy = self.box_yy(img, box_size)
         return dxx*dyy - (HESSIAN_WEIGHTS[box_size]*dxy)**2
     
     def _d0(self, doh, x, y, p,l):
@@ -194,11 +196,11 @@ class Surf:
         http://www.ipol.im/pub/art/2015/69/ page 93
         """
         doh = dict()
-        #for ksize in OCTAVES.flatten():
-        #    doh[ksize] = self.det_hessian(img, ksize)
+        for ksize in OCTAVES.flatten():
+            doh[ksize] = self.det_hessian(img, ksize)
         
         for o in range(1,4):
-            for i in range(2,3):
+            for i in range(1,2):
                 l = L(o,i)
                 print( l)
         

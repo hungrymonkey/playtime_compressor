@@ -4,6 +4,7 @@ import numpy as np
 
 from .img_kernel import *
 from .surf import *
+from .sift import *
 from .utils import *
 
 
