@@ -17,11 +17,11 @@ def gauss_kernel(sig, ksize=3):
    exponents = np.exp( -(x**2+y**2)/(2*sig**2))
    return exponents/exponents.sum()
 
-def L(i):
+def L(o,i):
     """
     http://www.ipol.im/pub/art/2015/69/ page 190
     """
-    return 2*i+1
+    return (2**o)*i+1
 """
 similar to matlab 
 pkg load image
