@@ -2,6 +2,7 @@
 import sys, argparse
 import numpy as np
 import cv2
+from matplotlib import pyplot as plt
 
 
 def main(argv):
@@ -14,17 +15,17 @@ def main(argv):
        quit()
     source_grey = cv2.imread(opts.s[0], cv2.IMREAD_GRAYSCALE)
     test_grey = cv2.imread(opts.i[0], cv2.IMREAD_GRAYSCALE)
-    kaze = cv2.KAZE_create()
-    (kp1, des1) = kaze.detectAndCompute(source_grey, None)
-    (kp2, des2) = kaze.detectAndCompute(test_grey, None)
+    akaze = cv2.AKAZE_create()
+    (kp1, des1) = akaze.detectAndCompute(source_grey, None)
+    (kp2, des2) = akaze.detectAndCompute(test_grey, None)
     print("# kps: {}, descriptors: {}".format(len(kp1), des1.shape))
     print("# kps: {}, descriptors: {}".format(len(kp2), des2.shape))
-    FLANN_INDEX_KDTREE = 0
-    index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
-    search_params = dict(checks=50)
-    flann = cv2.FlannBasedMatcher(index_params,search_params)
-    matches = flann.knnMatch(des1,des2,k=2)
-    matchesMask = [[0,0] for i in xrange(len(matches))]
+
+    bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
+    matches = bf.match(des1,des2)
+    matches = sorted(matches, key = lambda x:x.distance)
+    img3 = cv2.drawMatches(source_grey,kp1,test_grey,kp2,matches[:10],None, flags=2)
+    plt.imshow(img3),plt.show()
 
 if __name__ == "__main__":
     cv2.ocl.setUseOpenCL(False)
