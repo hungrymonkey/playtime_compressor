@@ -2,7 +2,7 @@
 skips ads. skips commentary. pure play time
 
 * TODO
-  - Implementing SURF 
+  - Implement SURF 
   
   
 * Paper
